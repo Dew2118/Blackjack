@@ -73,6 +73,21 @@ class Hand:
     self.cards.extend(deck.draw(number_of_cards))
 
   def is_blackjack(self):
+    if self.name == 'dealer':
+      self.stdscr.addstr(2,0,'Black')
+      self.stdscr.addstr(3,0,'jack')
+    elif leght == 2:
+      self.stdscr.addstr(15,0,'Black')
+      self.stdscr.addstr(16,0,'jack')
+    elif leght == 3:
+      self.stdscr.addstr(22,0,'Black')
+      self.stdscr.addstr(23,0,'jack')
+    elif leght == 4:
+      self.stdscr.addstr(29,0,'Black')
+      self.stdscr.addstr(30,0,'jack')
+    elif self.name == 'player1':
+      self.stdscr.addstr(8,0,'Black')
+      self.stdscr.addstr(9,0,'jack')
     if len(self.cards) != 2:
       return False
     scores = [c.get_score() for c in self.cards]
@@ -90,6 +105,17 @@ class Hand:
       pass
 
   def is_busted(self):
+    if (self.get_score() > 21) == True:
+      if self.name == 'dealer':
+      self.stdscr.addstr(5,0,'Black')
+      elif leght == 2:
+        self.stdscr.addstr(19,0,'Black')
+      elif leght == 3:
+        self.stdscr.addstr(26,0,'Black')
+      elif leght == 4:
+        self.stdscr.addstr(33,0,'Black')
+      elif self.name == 'player1':
+        self.stdscr.addstr(12,0,'Black')
     return (self.get_score() > 21)
 
   def get_card(self,index):
@@ -146,6 +172,23 @@ class Hand:
       self.already_displayed.append(a)
     return
 
+  def self.clear_arrow(self):
+    y_list = [3,17,24,31,10]
+    for y in y_list:
+      for x in range(6):
+        self.stdscr.addstr(y,x,' ')
+
+  def show_player(self):
+      if self.name == 'dealer':
+        self.stdscr.addstr(0,0,self.name)
+      elif leght == 2:
+        self.stdscr.addstr(7,0,self.name)
+      elif leght == 3:
+        self.stdscr.addstr(14,0,self.name)
+      elif leght == 4:
+        self.stdscr.addstr(21,0,self.name)
+      elif self.name == 'player1':
+        self.stdscr.addstr(28,0,self.name)
 
   def display_one_card(self):
     self.cards[0].display(0,7)
@@ -166,6 +209,8 @@ class Hand:
         self.split()
       if draw_or_not == 'n':
         break
+    self.clear_arrow()
+    
     self.display(leght)
     return
 
