@@ -1,3 +1,5 @@
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
 import curses
 import random
 from collections import deque
@@ -72,7 +74,7 @@ class Hand:
   def draw(self,deck,number_of_cards):
     self.cards.extend(deck.draw(number_of_cards))
 
-  def is_blackjack(self):
+  def is_blackjack(self,leght):
     if self.name == 'dealer':
       self.stdscr.addstr(2,0,'Black')
       self.stdscr.addstr(3,0,'jack')
@@ -104,10 +106,10 @@ class Hand:
     except Exception:
       pass
 
-  def is_busted(self):
+  def is_busted(self,leght):
     if (self.get_score() > 21) == True:
       if self.name == 'dealer':
-      self.stdscr.addstr(5,0,'Black')
+        self.stdscr.addstr(5,0,'Black')
       elif leght == 2:
         self.stdscr.addstr(19,0,'Black')
       elif leght == 3:
@@ -172,7 +174,7 @@ class Hand:
       self.already_displayed.append(a)
     return
 
-  def self.clear_arrow(self):
+  def clear_arrow(self):
     y_list = [3,17,24,31,10]
     for y in y_list:
       for x in range(6):
@@ -197,7 +199,7 @@ class Hand:
     self.cards[0].display_card_skeleton(0,14)
 
   def play(self,deck,leght):
-    while not(self.is_busted()) and not(self.is_blackjack()):
+    while not(self.is_busted(leght)) and not(self.is_blackjack(leght)):
       self.display(leght)
       self.stdscr.addstr(35,0,'want to draw?')
       b = self.stdscr.getstr(35,14)
@@ -210,7 +212,7 @@ class Hand:
       if draw_or_not == 'n':
         break
     self.clear_arrow()
-    
+
     self.display(leght)
     return
 
