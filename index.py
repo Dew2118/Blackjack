@@ -207,7 +207,7 @@ class Hand:
       if draw_or_not == 'y':
         self.draw(deck,1)
         self.stdscr.refresh()
-      if draw_or_not == 's':
+      if draw_or_not == 's' and self.name == 'dealer':
         self.split()
       if draw_or_not == 'n':
         break
