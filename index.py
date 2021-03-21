@@ -47,7 +47,7 @@ class Deck:
   def __init__(self,stdscr):
     value = map(str,['A',2,3,4,5,6,7,8,9,10,'J','Q','K'])
     suit = ['C','H','S','D']
-    self.cards = [Card('9','S',stdscr),Card('9','H',stdscr),Card('9','C',stdscr),Card('9','D',stdscr)]#Card(v,s,stdscr) for v in (value) for s in (suit)]
+    self.cards = [Card(v,s,stdscr) for v in (value) for s in (suit)]
 
   def shuffle(self):
     random.shuffle(self.cards)
@@ -74,26 +74,26 @@ class Hand:
   def draw(self,deck,number_of_cards):
     self.cards.extend(deck.draw(number_of_cards))
 
-  def is_blackjack(self,leght):
-    if self.name == 'dealer':
-      self.stdscr.addstr(2,0,'Black')
-      self.stdscr.addstr(3,0,'jack')
-    elif leght == 2:
-      self.stdscr.addstr(15,0,'Black')
-      self.stdscr.addstr(16,0,'jack')
-    elif leght == 3:
-      self.stdscr.addstr(22,0,'Black')
-      self.stdscr.addstr(23,0,'jack')
-    elif leght == 4:
-      self.stdscr.addstr(29,0,'Black')
-      self.stdscr.addstr(30,0,'jack')
-    elif self.name == 'player1':
-      self.stdscr.addstr(8,0,'Black')
-      self.stdscr.addstr(9,0,'jack')
+  def is_blackjack(self,leght = 0):
     if len(self.cards) != 2:
       return False
     scores = [c.get_score() for c in self.cards]
     if sorted(scores) == [1,10]:
+      if self.name == 'dealer':
+        self.stdscr.addstr(2,0,'Black')
+        self.stdscr.addstr(3,0,'jack')
+      elif leght == 2:
+        self.stdscr.addstr(15,0,'Black')
+        self.stdscr.addstr(16,0,'jack')
+      elif leght == 3:
+        self.stdscr.addstr(22,0,'Black')
+        self.stdscr.addstr(23,0,'jack')
+      elif leght == 4:
+        self.stdscr.addstr(29,0,'Black')
+        self.stdscr.addstr(30,0,'jack')
+      elif self.name == 'player1':
+        self.stdscr.addstr(8,0,'Black')
+        self.stdscr.addstr(9,0,'jack')
       return True
     return False
 
@@ -106,18 +106,18 @@ class Hand:
     except Exception:
       pass
 
-  def is_busted(self,leght):
+  def is_busted(self,leght = 0):
     if (self.get_score() > 21) == True:
       if self.name == 'dealer':
-        self.stdscr.addstr(5,0,'Black')
+        self.stdscr.addstr(5,0,'Busted')
       elif leght == 2:
-        self.stdscr.addstr(19,0,'Black')
+        self.stdscr.addstr(19,0,'Busted')
       elif leght == 3:
-        self.stdscr.addstr(26,0,'Black')
+        self.stdscr.addstr(26,0,'Busted')
       elif leght == 4:
-        self.stdscr.addstr(33,0,'Black')
+        self.stdscr.addstr(33,0,'Busted')
       elif self.name == 'player1':
-        self.stdscr.addstr(12,0,'Black')
+        self.stdscr.addstr(12,0,'Busted')
     return (self.get_score() > 21)
 
   def get_card(self,index):
@@ -147,7 +147,7 @@ class Hand:
     self.stdscr.refresh()
     return
   def arrow(self,y):
-    for x in range(5):
+    for x in range(6):
       self.stdscr.addstr(y,x,'-')
     self.stdscr.addstr(y,6,'>')
 
@@ -168,37 +168,39 @@ class Hand:
     self.arrow(a)
     for c in self.cards:
       if not c in self.already_displayed_set:
-        c.display(7,self.card_count)
+        c.display(a-3,self.card_count)
         self.card_count += 7
-    for a in self.cards:
-      self.already_displayed.append(a)
+    for b in self.cards:
+      self.already_displayed.append(b)
     return
 
   def clear_arrow(self):
-    y_list = [3,17,24,31,10]
+    y_list = [3,10,17,24,32]
     for y in y_list:
-      for x in range(6):
+      for x in range(7):
         self.stdscr.addstr(y,x,' ')
+    self.stdscr.refresh()
 
-  def show_player(self):
+  def show_player(self,leght):
       if self.name == 'dealer':
         self.stdscr.addstr(0,0,self.name)
       elif leght == 2:
-        self.stdscr.addstr(7,0,self.name)
-      elif leght == 3:
         self.stdscr.addstr(14,0,self.name)
-      elif leght == 4:
+      elif leght == 3:
         self.stdscr.addstr(21,0,self.name)
-      elif self.name == 'player1':
+      elif leght == 4:
         self.stdscr.addstr(28,0,self.name)
+      elif self.name == 'player1':
+        self.stdscr.addstr(7,0,self.name)
 
   def display_one_card(self):
     self.cards[0].display(0,7)
-    self.card_count+=7
+    self.card_count=14
     self.already_displayed.append(self.cards[0])
     self.cards[0].display_card_skeleton(0,14)
 
   def play(self,deck,leght):
+    self.show_player(leght)
     while not(self.is_busted(leght)) and not(self.is_blackjack(leght)):
       self.display(leght)
       self.stdscr.addstr(35,0,'want to draw?')
@@ -212,7 +214,6 @@ class Hand:
       if draw_or_not == 'n':
         break
     self.clear_arrow()
-
     self.display(leght)
     return
 
